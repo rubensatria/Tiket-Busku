@@ -55,7 +55,7 @@ function tujuanSetelahLogin() {
 // ───── GUARD ─────
 // jalan langsung saat script dimuat di <head>
 const NAMA_FILE     = (window.location.pathname.split('/').pop() || '').toLowerCase();
-const HALAMAN_LOGIN = (NAMA_FILE === 'login.html');
+const HALAMAN_LOGIN = (NAMA_FILE === 'index.html');
 
 if (getSession()) {
   // sudah login tapi membuka login.html -> langsung ke halaman utama
@@ -66,13 +66,13 @@ if (getSession()) {
   // belum login dan membuka halaman lain -> ke login.html
   document.documentElement.style.visibility = 'hidden';
   const asal = (NAMA_FILE || 'halaman.html') + window.location.search;
-  window.location.replace('login.html?next=' + encodeURIComponent(asal));
+  window.location.replace('index.html?next=' + encodeURIComponent(asal));
 }
 
 // ───── LOGOUT ─────
 function logout() {
   try { localStorage.removeItem(SESSION_KEY); } catch (e) {}
-  window.location.replace('login.html');
+  window.location.replace('index.html');
 }
 
 // ───── NAVBAR USER + TOMBOL MENU MOBILE (disuntikkan otomatis) ─────
