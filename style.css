@@ -829,25 +829,7 @@ footer p { font-size: .85rem; line-height: 1.7; }
 }
 .btn--full-center { width: 100%; justify-content: center; }
 
-/* ===== RESPONSIVE ===== */
-@media (max-width: 768px) {
-  .search-box { grid-template-columns: 1fr 1fr; }
-  .footer-grid { grid-template-columns: 1fr 1fr; }
-  .contact-grid { grid-template-columns: 1fr; }
-  .form-row { grid-template-columns: 1fr; }
-  nav { flex-wrap: wrap; gap: .6rem; }
-  .nav-links { gap: 1rem; }
-  .hero h1 { font-size: 1.7rem; }
-  .hero::after { width: 160px; height: 160px; }
-}
-@media (max-width: 480px) {
-  .search-box { grid-template-columns: 1fr; }
-  .footer-grid { grid-template-columns: 1fr; }
-  .nav-links { display: none; }
-  .steps { gap: .2rem; }
-  .step-line { min-width: 16px; }
-  nav::after { background-size: 28px 3px; }
-}
+/* (aturan responsif / mobile ada di bagian paling bawah file ini) */
 
 /* ===== REDUCE MOTION ===== */
 @media (prefers-reduced-motion: reduce) {
@@ -918,3 +900,309 @@ nav > .btn-primary { margin-right: .9rem; }
   background: linear-gradient(135deg, #BFDDF0, #8CC0EB);
 }
 .card-btn { margin-top: .8rem; }
+
+/* =============================================
+   RESPONSIVE / MOBILE
+   Ditaruh paling bawah supaya menang atas aturan desktop di atas
+   ============================================= */
+
+/* mencegah halaman bisa digeser ke samping */
+html, body { max-width: 100%; overflow-x: hidden; }
+
+/* tombol hamburger: disuntikkan JS, disembunyikan di desktop */
+.nav-toggle {
+  display: none;
+  width: 42px;
+  height: 42px;
+  margin-left: auto;
+  flex-shrink: 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255,255,255,.55);
+  cursor: pointer;
+}
+.nav-toggle span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--primary);
+  transition: transform .25s var(--ease), opacity .2s;
+}
+nav.menu-open .nav-toggle span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+nav.menu-open .nav-toggle span:nth-child(2) { opacity: 0; }
+nav.menu-open .nav-toggle span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* modal tidak boleh lebih tinggi dari layar */
+.modal-box { max-height: 85vh; max-height: 85dvh; overflow-y: auto; }
+
+/* offset scroll karena navbar fixed */
+.table-filters { scroll-margin-top: 90px; }
+
+/* kontak cepat: ikon di kiri, judul + teks di kanan (juga memperbaiki item Email) */
+.quickcontact-item { display: grid; grid-template-columns: 44px 1fr; column-gap: .9rem; align-items: center; }
+.quickcontact-item > .quickcontact-icon { grid-row: 1 / span 2; grid-column: 1; }
+.quickcontact-item > div:not(.quickcontact-icon) { grid-column: 2; grid-row: 1 / span 2; }
+.quickcontact-item > h4 { grid-column: 2; grid-row: 1; align-self: end; }
+.quickcontact-item > p  { grid-column: 2; grid-row: 2; align-self: start; }
+img.quickcontact-icon { object-fit: contain; padding: .4rem; }
+
+/* ---------- Tablet ---------- */
+@media (max-width: 900px) {
+  .contact-grid { grid-template-columns: 1fr; }
+  .hero { padding: 9rem 2rem 3rem; }
+  .hero-mini { padding: 9rem 1rem 4rem; }
+}
+
+/* ---------- HP (<= 768px) ---------- */
+@media (max-width: 768px) {
+
+  body { background-attachment: scroll; }
+
+  /* ----- Navbar + menu hamburger ----- */
+  nav { flex-wrap: wrap; padding: .55rem 1rem; gap: 0; }
+  nav.menu-open { max-height: 100vh; max-height: 100dvh; overflow-y: auto; }
+  nav::after { background-size: 28px 3px; }
+  .nav-brand { order: 1; font-size: 1.25rem; }
+  .nav-toggle { display: flex; order: 2; }
+
+  nav .nav-links,
+  nav > .btn-primary,
+  nav .nav-user { display: none; width: 100%; }
+
+  nav.menu-open .nav-links {
+    display: flex;
+    flex-direction: column;
+    order: 3;
+    gap: 0;
+    margin: .6rem 0 0;
+  }
+  nav.menu-open .nav-links li a {
+    display: block;
+    padding: .85rem .4rem;
+    border-bottom: 1px solid rgba(14,116,144,.15);
+    font-size: 1rem;
+  }
+  nav.menu-open .nav-links li:last-child a { border-bottom: none; }
+  nav.menu-open .nav-links a::after { display: none; }
+  nav.menu-open .nav-links a.active { color: var(--accent); font-weight: 700; }
+
+  nav.menu-open > .btn-primary {
+    display: flex;
+    order: 4;
+    justify-content: center;
+    margin: .6rem 0 0;
+  }
+  nav.menu-open .nav-user {
+    display: flex;
+    order: 5;
+    justify-content: space-between;
+    align-items: center;
+    margin: .8rem 0 .4rem;
+    padding-top: .8rem;
+    border-top: 1px solid rgba(14,116,144,.2);
+  }
+  nav.menu-open .nav-user .nav-user-name { max-width: 60%; font-size: .9rem; }
+  nav.menu-open .nav-user .btn-outline {
+    padding: .45rem .9rem;
+    border: 1.5px solid var(--teal);
+    border-radius: 6px;
+    font-size: .85rem;
+  }
+
+  /* ----- Hero ----- */
+  .hero { padding: 6.5rem 1.1rem 2rem; }
+  .hero h1 { font-size: 1.6rem; }
+  .hero p { font-size: .92rem; margin-bottom: 1.4rem; }
+  .hero::before { width: 300px; height: 300px; }
+  .hero::after { width: 160px; height: 160px; }
+
+  .hero-mini { padding: 6.5rem 1rem 2.6rem; }
+  .hero-mini-title { font-size: 1.45rem; }
+  .hero-mini-sub { font-size: .88rem; padding: 0 .5rem; }
+
+  /* ----- Kotak pencarian ----- */
+  .search-box { grid-template-columns: 1fr 1fr; padding: 1.1rem; }
+  .search-box > div { min-width: 0; }
+  .search-box > div:last-child { grid-column: 1 / -1; }
+  .search-box > div:last-child label { display: none; }
+  .search-box:hover { transform: none; }
+
+  /* ----- Section, judul ----- */
+  .section { padding: 2.2rem 1rem; }
+  .section-title { font-size: 1.35rem; }
+  .section-sub { font-size: .88rem; margin-bottom: 1.4rem; }
+  .promo-banner { padding: 2rem 1rem; }
+  .promo-title { font-size: 1.35rem; }
+  .promo-desc { font-size: .9rem; }
+  .stat-grid { grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+  .stat-number { font-size: 1.7rem; }
+
+  /* ----- Grid kartu ----- */
+  .card-grid,
+  .berita-grid,
+  .feature-list { grid-template-columns: 1fr; gap: 1rem; }
+  .card:hover,
+  .berita-card:hover,
+  .feature-item:hover,
+  .guide-item:hover,
+  .contact-card:hover,
+  .quickcontact-item:hover { transform: none; }
+
+  /* ----- Form: ukuran font 16px agar iOS tidak zoom otomatis ----- */
+  .form-control,
+  .search-box input,
+  .search-box select,
+  .table-filters input,
+  .table-filters select,
+  .faq-search .form-control { font-size: 16px; }
+  .form-control { min-height: 44px; }
+  textarea.form-control { min-height: 110px; }
+  input[type="date"].form-control,
+  .search-box input[type="date"] {
+    -webkit-appearance: none;
+    appearance: none;
+    display: block;
+    min-width: 0;
+    min-height: 44px;
+    line-height: normal;
+  }
+  .form-wrapper { padding: 1.2rem; }
+  .form-title { font-size: 1.08rem; margin-bottom: 1.1rem; }
+  .form-row { grid-template-columns: 1fr; gap: 0; }
+  .btn { min-height: 44px; justify-content: center; }
+  .btn-sm { min-height: 38px; }
+  .btn-primary:hover,
+  .btn-outline:hover,
+  .btn-success:hover { transform: none; }
+
+  /* ----- Pesan tiket ----- */
+  .steps { flex-wrap: nowrap; gap: .3rem; margin-bottom: 1.4rem; }
+  .step { font-size: 0; gap: 0; }
+  .step-num { font-size: .8rem; flex-shrink: 0; }
+  .step.active { font-size: .82rem; gap: .4rem; white-space: nowrap; }
+  .step-line { min-width: 10px; }
+
+  .counter-wrap { flex-wrap: wrap; }
+  .counter-btn { width: 40px; height: 40px; font-size: 1.3rem; }
+  .counter-hint { flex-basis: 100%; margin-left: 0; }
+  .promo-input-wrap { flex-direction: column; }
+  .btn-row { flex-direction: column-reverse; }
+
+  .seat-grid { align-items: center; }
+  .seat { width: 40px; height: 40px; font-size: .75rem; }
+  .seat.available:hover { transform: none; }
+  .seat-legend { flex-wrap: wrap; justify-content: center; gap: .8rem 1.2rem; }
+  .seat-info { text-align: center; }
+
+  .summary-row { gap: 1rem; }
+  .summary-row span:last-child { text-align: right; word-break: break-word; }
+  .kode-booking { font-size: 1.25rem; letter-spacing: 1px; }
+
+  .riwayat-card { padding: 1rem; }
+  .riwayat-card-head { flex-direction: column; align-items: stretch; }
+  .riwayat-clear { text-align: center; }
+
+  /* ----- Berita: filter + pagination ----- */
+  .table-filters { flex-direction: column; align-items: stretch; }
+  .table-filters input,
+  .table-filters select { width: 100%; min-width: 0; }
+  .filter-search { min-width: 0; }
+  .filter-result-count { margin-left: 0; }
+  .pagination-wrap { flex-wrap: wrap; }
+  .berita-card img { height: 190px; }
+
+  .modal-box { width: 92%; padding: 1.4rem 1.2rem; }
+
+  /* ----- Bantuan ----- */
+  .guide-item { padding: 1rem; gap: .8rem; }
+  .guide-num { width: 36px; height: 36px; font-size: .95rem; }
+  .faq-list { max-width: 100%; }
+  .faq-search .form-control { max-width: 100%; }
+  .faq-q { font-size: .9rem; padding: .9rem 1rem; gap: .8rem; }
+  .faq-a.open { padding: .4rem 1rem 1rem; }
+  .rating-wrap { font-size: 2.1rem; gap: .6rem; }
+  .contact-card { padding: 1rem; }
+  .quickcontact-grid { grid-template-columns: 1fr; }
+
+  /* ----- Footer ----- */
+  footer { padding: 2rem 1.2rem 1.2rem; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .footer-grid > div:first-child { grid-column: 1 / -1; }
+
+  /* ----- Toast: lebar penuh di bawah layar ----- */
+  .toast { left: 1rem; right: 1rem; bottom: 1rem; max-width: none; }
+
+  /* ----- Login ----- */
+  .login-page { min-height: 100vh; min-height: 100dvh; background-attachment: scroll; padding: 1.5rem 1rem; }
+  .login-brand { font-size: 1.7rem; }
+}
+
+/* ---------- Tabel pengumuman jadi kartu (<= 640px) ---------- */
+@media (max-width: 640px) {
+  .table-wrapper { box-shadow: none; background: transparent; overflow: visible; border-radius: 0; }
+  .table-wrapper table,
+  .table-wrapper tbody,
+  .table-wrapper tfoot,
+  .table-wrapper tr,
+  .table-wrapper td { display: block; width: 100%; }
+  .table-wrapper table { background: transparent; }
+  .table-wrapper thead { display: none; }
+
+  #tabelBody tr {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: 0 2px 10px rgba(26,58,92,.08);
+    margin-bottom: .8rem;
+    padding: .7rem .9rem;
+  }
+  #tabelBody td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: .4rem 0;
+    text-align: right;
+    border: none;
+  }
+  #tabelBody td::before {
+    content: attr(data-label);
+    flex-shrink: 0;
+    font-size: .78rem;
+    font-weight: 600;
+    color: var(--muted);
+    text-align: left;
+  }
+  #tabelBody td[data-label="#"] { display: none; }
+  #tabelBody td[data-label="Judul"] {
+    display: block;
+    max-width: none !important;
+    padding-bottom: .5rem;
+    text-align: left;
+    font-size: .95rem;
+    line-height: 1.4;
+    color: var(--primary);
+  }
+  #tabelBody td[data-label="Judul"]::before,
+  #tabelBody td[data-label="Aksi"]::before { display: none; }
+  #tabelBody td[data-label="Aksi"] { justify-content: stretch; padding-top: .6rem; }
+  #tabelBody td[data-label="Aksi"] .btn { width: 100%; }
+  #tabelBody td:not([data-label]) { display: block; text-align: center; }
+  tbody tr:hover td:first-child { box-shadow: none; }
+  tfoot td { display: block; text-align: center; background: transparent; }
+}
+
+/* ---------- HP kecil (<= 480px) ---------- */
+@media (max-width: 480px) {
+  .search-box { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 1.45rem; }
+  .section-title { font-size: 1.25rem; }
+  .footer-grid { grid-template-columns: 1fr; }
+  .stat-number { font-size: 1.5rem; }
+  .login-wrap { max-width: 100%; }
+}

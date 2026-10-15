@@ -79,7 +79,41 @@ function logout() {
 document.addEventListener('DOMContentLoaded', () => {
   const s = getSession();
   const nav = document.querySelector('nav');
-  if (!s || !nav) return;
+  if (!nav) return;
+
+  // tombol hamburger (tampil hanya di HP lewat CSS)
+  const toggle = document.createElement('button');
+  toggle.type = 'button';
+  toggle.className = 'nav-toggle';
+  toggle.setAttribute('aria-label', 'Buka menu');
+  toggle.setAttribute('aria-expanded', 'false');
+  toggle.innerHTML = '<span></span><span></span><span></span>';
+  const daftarLink = nav.querySelector('.nav-links');
+  nav.insertBefore(toggle, daftarLink || null);
+
+  function setMenu(buka) {
+    nav.classList.toggle('menu-open', buka);
+    toggle.setAttribute('aria-expanded', buka ? 'true' : 'false');
+    toggle.setAttribute('aria-label', buka ? 'Tutup menu' : 'Buka menu');
+  }
+  toggle.addEventListener('click', () => setMenu(!nav.classList.contains('menu-open')));
+  // tutup menu saat salah satu link dipilih
+  nav.querySelectorAll('.nav-links a, nav > .btn-primary').forEach(a => {
+    a.addEventListener('click', () => setMenu(false));
+  });
+  // tutup menu saat tap di luar navbar atau tekan Escape
+  document.addEventListener('click', e => {
+    if (nav.classList.contains('menu-open') && !nav.contains(e.target)) setMenu(false);
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') setMenu(false);
+  });
+  // kalau layar dilebarkan lagi (rotasi HP / desktop), reset menu
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 768) setMenu(false);
+  });
+
+  if (!s) return;
 
   const box = document.createElement('div');
   box.className = 'nav-user';
@@ -446,7 +480,14 @@ function tampilStep(n) {
     s.classList.toggle('active', i === n);
     s.classList.toggle('done', i < n);
   }
-  window.scrollTo(0, 0);
+  // scroll ke indikator langkah (bukan ke paling atas) supaya di HP tidak perlu menggulir lagi
+  const bar = document.getElementById('stepBar');
+  if (bar) {
+    const y = bar.getBoundingClientRect().top + window.pageYOffset - 90;
+    window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+  } else {
+    window.scrollTo(0, 0);
+  }
 }
 
 function kembaliStep(n) {
@@ -853,12 +894,12 @@ function renderTabel() {
  
   tbody.innerHTML = slice.map((d, i) => `
     <tr>
-      <td style="color:var(--muted); font-size:.82rem;">${start + i + 1}</td>
-      <td style="font-weight:600; max-width:280px;">${d.judul}</td>
-      <td><span class="badge badge-info">${d.kategori}</span></td>
-      <td>${new Date(d.tanggal).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'})}</td>
-      <td><span class="badge ${badgeMap[d.status]}">${d.status}</span></td>
-      <td><button class="btn btn-outline btn-sm" onclick="lihatDetail(${pengumumanData.indexOf(d)})">Detail</button></td>
+      <td data-label="#" style="color:var(--muted); font-size:.82rem;">${start + i + 1}</td>
+      <td data-label="Judul" style="font-weight:600; max-width:280px;">${d.judul}</td>
+      <td data-label="Kategori"><span class="badge badge-info">${d.kategori}</span></td>
+      <td data-label="Tanggal">${new Date(d.tanggal).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'})}</td>
+      <td data-label="Status"><span class="badge ${badgeMap[d.status]}">${d.status}</span></td>
+      <td data-label="Aksi"><button class="btn btn-outline btn-sm" onclick="lihatDetail(${pengumumanData.indexOf(d)})">Detail</button></td>
     </tr>
   `).join('');
  
@@ -919,7 +960,8 @@ function renderPaginasi() {
 function gantiPage(n) {
   currentPage = n;
   renderTabel();
-  document.querySelector('.section').scrollIntoView({behavior:'smooth'});
+  const filter = document.querySelector('.table-filters');
+  (filter || document.querySelector('.section')).scrollIntoView({behavior:'smooth', block:'start'});
 }
  
 // ───── MODAL ─────
